@@ -1,18 +1,21 @@
 /*
   File: app/src/main/java/com/example/myapplication/MainActivity.kt
 
-  This is the simplified version of the MainActivity. It removes all logic
-  related to the settings page and SharedPreferences.
+  This is the main activity for your streaming app. It handles the camera preview,
+  permissions, and starting/stopping the stream based on the URL saved in Settings.
 */
 package com.example.myapplication
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.SurfaceHolder
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,9 +29,10 @@ class MainActivity : AppCompatActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
     private var rtmpCamera1: RtmpCamera1? = null
     private lateinit var startStopButton: Button
-    private lateinit var rtmpUrlEditText: EditText
+    private lateinit var settingsButton: ImageButton
     private lateinit var openGlView: OpenGlView
     private lateinit var statusTextView: TextView
+    private lateinit var sharedPreferences: SharedPreferences
 
     private val requiredPermissions = arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
     private val PERMISSION_REQUEST_CODE = 101
@@ -42,14 +46,21 @@ class MainActivity : AppCompatActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
 
         // Initialize views
         startStopButton = findViewById(R.id.start_stop_button)
-        rtmpUrlEditText = findViewById(R.id.rtmp_url)
+        settingsButton = findViewById(R.id.settings_button)
         openGlView = findViewById(R.id.openGlView)
         statusTextView = findViewById(R.id.bitrate_text)
+
+        sharedPreferences = getSharedPreferences(SettingsActivity.PREFS_NAME, Context.MODE_PRIVATE)
 
         openGlView.holder.addCallback(this)
 
         startStopButton.setOnClickListener {
             handleStreamButtonClick()
+        }
+
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
 
         if (!hasAllPermissions()) {
@@ -66,9 +77,11 @@ class MainActivity : AppCompatActivity(), ConnectCheckerRtmp, SurfaceHolder.Call
     }
 
     private fun handleStreamButtonClick() {
-        val rtmpUrl = rtmpUrlEditText.text.toString().trim()
+        // Load the URL from SharedPreferences
+        val rtmpUrl = sharedPreferences.getString(SettingsActivity.KEY_RTMP_URL, "") ?: ""
+
         if (rtmpUrl.isEmpty()) {
-            Toast.makeText(this, "Please enter a valid RTMP URL", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Please set an RTMP URL in Settings", Toast.LENGTH_LONG).show()
             return
         }
 

@@ -1,7 +1,7 @@
 <!--
   File: app/src/main/AndroidManifest.xml
 
-  This is the simplified manifest. The entry for SettingsActivity has been removed.
+  This manifest has been updated to include the SettingsActivity.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -32,6 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- The SettingsActivity is re-added here -->
+        <activity android:name=".SettingsActivity" />
 
     </application>
 
