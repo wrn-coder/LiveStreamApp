@@ -1,0 +1,18 @@
+/*
+  File: build.gradle (Project-level, NOT the app/build.gradle)
+
+  This is the top-level build file. Using the modern plugin syntax, we declare the
+  plugins here but set 'apply false'. This makes them available to sub-modules
+  (like your app module) without applying them to the root project itself.
+
+  The version numbers should be kept up-to-date with recent, stable releases
+  from Android Studio.
+*/
+plugins {
+    // Defines the Android Application plugin and its version. 'apply false' means
+    // it will be applied in the module's build.gradle file.
+    id 'com.android.application' version '8.11.1' apply false
+
+    // Defines the Kotlin Android plugin and its version.
+    id 'org.jetbrains.kotlin.android' version '1.9.22' apply false
+}

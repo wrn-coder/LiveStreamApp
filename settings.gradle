@@ -1,0 +1,25 @@
+/*
+File: settings.gradle
+
+This file is crucial. It declares the plugin repositories for the entire project.
+The error you're seeing happens because Gradle doesn't know to look in Google's
+Maven repository for the Android Application plugin. This file fixes that.
+*/
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // The JitPack repository is required for the RTMP library we added earlier
+maven { url 'https://jitpack.io' }
+}
+}
+rootProject.name = "LiveStreamApp" // You can change this to your app's name
+include ':app'
